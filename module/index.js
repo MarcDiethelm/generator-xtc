@@ -3,12 +3,12 @@ var util = require('util');
 var path = require('path');
 var yeoman = require('yeoman-generator');
 
+var  modulesDir = 'frontend/_terrific/';
+
 var ModuleGenerator = module.exports = function ModuleGenerator(args, options, config) {
   // By calling `NamedBase` here, we get the argument to the subgenerator call
   // as `this.name`.
   yeoman.generators.NamedBase.apply(this, arguments);
-
-  console.log('You called the module subgenerator with the argument ' + this.name + '.');
 };
 
 util.inherits(ModuleGenerator, yeoman.generators.NamedBase);
@@ -26,14 +26,15 @@ ModuleGenerator.prototype.askFor = function askFor() {
 		'    express-terrific module generator\n\n'.blue.bold +
 		'Please answer a few questions to create your new module.\n'.green
 	;
-
 	console.log(welcome);
 
+	// module name
 	var prompts = [
 		{
 			name: 'name'
 			,message: 'What\'s the name of the new module?\n' +
 			          '(all lowercase, hyphen separated, without \'mod-\')'
+			,default: this.name
 			/*,validator: function (value, next) {
 				var nameFolder = 'mod-' + value
 					, destDir = path.join(modulesDir, nameFolder)
@@ -48,40 +49,122 @@ ModuleGenerator.prototype.askFor = function askFor() {
 	];
 
 	this.prompt(prompts, function (err, props) {
-		var  modulesDir = 'frontend/_terrific/';
-
 		if (err) {
 			return this.emit('error', err);
 		}
-
 		this.name = props.name;
-		this.needHtml = /y/i.test(props.needHtml);
-		this.needJS = /y/i.test(props.needJS);
-		this.needCSS = /y/i.test(props.needCSS);
+		cb();
+	}.bind(this));
+};
 
-		this.nameCSS = 'mod-' + props.name;
-		this.nameFolder = this.nameCSS;
-		this.nameJS = toCamel(this.nameCSS).replace('mod', '');
-		this.nameTest = this.name + '.test.js';
-		//this.nameSkinJS
-		//this.nameSkinCSS
 
-		this.modulesDir = path.join(modulesDir, this.nameFolder);
+ModuleGenerator.prototype.customize = function customize() {
+	var cb = this.async();
+
+	nl();
+
+	// need customization?
+	var prompts = [
+		{
+			name: 'customize'
+			,message: 'By default this module will have one template, a style sheet, a JS module (with tests) and a README.\n' +
+			          'Do you want to change that?'
+			,default: 'y|N'
+		}
+	];
+
+	this.prompt(prompts, function (err, props) {
+		if (err) {
+			return this.emit('error', err);
+		}
+		this.customize = /y/i.test(props.customize);
 
 		cb();
 	}.bind(this));
 };
 
 
+ModuleGenerator.prototype.doCustomize = function doCustomize() {
+	var cb = this.async();
+
+	if (!this.customize) {
+		cb();
+		return;
+	}
+
+	nl();
+
+	var prompts = [
+		{
+			name: 'customizeSelection'
+			,message: 'Please choose:\n' +
+			          '[1] JS only\n' +
+			          '[2] HTML only\n' +
+			          '\n' +
+			          '[3] HTML + CSS\n' +
+			          '[4] HTML + JS\n' +
+			          '[5] JS + CSS\n' +
+			          ': '
+		}
+	];
+
+	this.prompt(prompts, function (err, props) {
+
+		if (err) {
+			return this.emit('error', err);
+		}
+
+		switch (props.customizeSelection) {
+			case '1':
+				this.needJs = true;
+				break;
+			case '2':
+				this.needHtml = true;
+				break;
+			case '3':
+				this.needHtml = true;
+				this.needCss = true;
+				break;
+			case '4':
+				this.needHtml = true;
+				this.needJs = true;
+				break;
+			case '5':
+				this.needJs = true;
+				this.needCss = true;
+				break;
+			default:
+				// to do: ask again
+		}
+
+		cb();
+	}.bind(this));
+};
+
+
+ModuleGenerator.prototype.configure = function configure() {
+	this.nameCSS = 'mod-' + this.name;
+	this.nameFolder = this.nameCSS;
+	this.nameJS = toCamel(this.nameCSS).replace('mod', '');
+	this.nameTest = this.name + '.test.js';
+	//this.nameSkinJS
+	//this.nameSkinCSS
+	this.modulesDir = path.join(modulesDir, this.nameFolder);
+};
+
+
 ModuleGenerator.prototype.files = function files() {
-
+	nl();
 	this.mkdir(this.modulesDir);
-	this.template('_name.hbs', path.join(this.modulesDir, this.name +'.hbs'));
-	this.template('_name.js', path.join(this.modulesDir, this.name +'.js'));
-	this.template('_name.less', path.join(this.modulesDir, this.name +'.less'));
+	(!this.customize || this.needHtml) && this.template('_name.hbs', path.join(this.modulesDir, this.name +'.hbs'));
+	(!this.customize || this.needCss) && this.template('_name.less', path.join(this.modulesDir, this.name +'.less'));
 
-	this.mkdir(path.join(this.modulesDir, 'test'));
-	this.template('test/_name.test.js', path.join(this.modulesDir, 'test', this.nameTest));
+	if (!this.customize || this.needJs) {
+		this.template('_name.js', path.join(this.modulesDir, this.name +'.js'));
+		this.mkdir(path.join(this.modulesDir, 'test'));
+		this.template('test/_name.test.js', path.join(this.modulesDir, 'test', this.nameTest));
+	}
+	this.template('_README.md', path.join(this.modulesDir, 'README.md'));
 };
 
 
@@ -96,4 +179,13 @@ ModuleGenerator.prototype.files = function files() {
 */
 var toCamel = function(str){
 	return str.replace(/(\-[A-Za-z])/g, function($1){return $1.toUpperCase().replace('-','');});
+}
+
+function nl(count) {
+	count = count || 1;
+
+	while (count > 0) {
+		console.log('');
+		count--;
+	}
 }

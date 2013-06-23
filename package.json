@@ -1,6 +1,6 @@
 {
   "name": "generator-xtc",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "A generator for xtc projects",
   "keywords": [
     "yeoman-generator", "xtc"
@@ -12,6 +12,7 @@
     "email": "",
     "url": "https://github.com/MarcDiethelm"
   },
+  "preferGlobal": true,
   "main": "app/index.js",
   "repository": {
     "type": "git",
