@@ -77,7 +77,7 @@ ModuleGenerator.prototype.customize = function customize() {
 		if (err) {
 			return this.emit('error', err);
 		}
-		this.customize = /y/i.test(props.customize);
+		this.customize = !(/y/i.test(props.customize));
 
 		cb();
 	}.bind(this));
