@@ -3,13 +3,19 @@ var util = require('util');
 var path = require('path');
 var yeoman = require('yeoman-generator');
 
-var  modulesDir = 'frontend/_terrific/';
-
 var ModuleGenerator = module.exports = function ModuleGenerator(args, options, config) {
   // By calling `NamedBase` here, we get the argument to the subgenerator call
   // as `this.name`.
   yeoman.generators.NamedBase.apply(this, arguments);
 };
+
+// Merge configuration data
+var cfg = require( path.join(process.cwd(), 'app_modules/configure.js') ).merge('_config/', [
+		 'default'
+		,'project'
+		,'secret'
+		,'local'
+	]).get();
 
 util.inherits(ModuleGenerator, yeoman.generators.NamedBase);
 
@@ -33,7 +39,7 @@ ModuleGenerator.prototype.askFor = function askFor() {
 		{
 			name: 'name'
 			,message: 'What\'s the name of the new module?\n' +
-			          '(all lowercase, hyphen separated, without \'mod-\')'
+			          '(all lowercase, hyphen separated, without any prefix)'
 			,default: this.name
 			/*,validator: function (value, next) {
 				var nameFolder = 'mod-' + value
@@ -144,12 +150,12 @@ ModuleGenerator.prototype.doCustomize = function doCustomize() {
 
 ModuleGenerator.prototype.configure = function configure() {
 	this.nameCSS = 'mod-' + this.name;
-	this.nameFolder = this.nameCSS;
+	this.nameFolder = cfg.moduleDirName.replace('{{name}}', this.name);
 	this.nameJS = toCamel(this.nameCSS).replace('mod', '');
 	this.nameTest = this.name + '.test.js';
 	//this.nameSkinJS
 	//this.nameSkinCSS
-	this.modulesDir = path.join(modulesDir, this.nameFolder);
+	this.modulesDir = path.join(cfg.paths.modulesBaseDir, this.nameFolder);
 };
 
 
