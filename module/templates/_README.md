@@ -1,6 +1,6 @@
 Documentation for the Terrific module
 
-# <%= name %>
+# *<%= name %>*
 
 
 ## Summary
