@@ -4,10 +4,13 @@ var path = require('path');
 var yeoman = require('yeoman-generator');
 
 var ModuleGenerator = module.exports = function ModuleGenerator(args, options, config) {
-  // By calling `NamedBase` here, we get the argument to the subgenerator call
-  // as `this.name`.
-  yeoman.generators.NamedBase.apply(this, arguments);
+	// By calling `NamedBase` here, we get the argument to the subgenerator call
+	// as `this.name`.
+	yeoman.generators.Base.apply(this, arguments);
+	this.argument('name', { type: String, required: false });
 };
+
+util.inherits(ModuleGenerator, yeoman.generators.NamedBase);
 
 // Merge configuration data
 var cfg = require( path.join(process.cwd(), 'app_modules/configure.js') ).merge('_config/', [
@@ -16,8 +19,6 @@ var cfg = require( path.join(process.cwd(), 'app_modules/configure.js') ).merge(
 		,'secret'
 		,'local'
 	]).get();
-
-util.inherits(ModuleGenerator, yeoman.generators.NamedBase);
 
 ModuleGenerator.prototype.askFor = function askFor() {
 	var cb = this.async();
@@ -41,23 +42,10 @@ ModuleGenerator.prototype.askFor = function askFor() {
 			,message: 'What\'s the name of the new module?\n' +
 			          '(all lowercase, hyphen separated, without any prefix)'
 			,default: this.name
-			/*,validator: function (value, next) {
-				var nameFolder = 'mod-' + value
-					, destDir = path.join(modulesDir, nameFolder)
-					;
-				if (grunt.file.exists(destDir)) {
-					console.log('A module with that name already exists!');
-				}
-				next(true);
-			}
-			,warning: 'A module with that name already exists!'*/
 		}
 	];
 
-	this.prompt(prompts, function (err, props) {
-		if (err) {
-			return this.emit('error', err);
-		}
+	this.prompt(prompts, function(props) {
 		this.name = props.name;
 		cb();
 	}.bind(this));
@@ -72,18 +60,16 @@ ModuleGenerator.prototype.customize = function customize() {
 	// need customization?
 	var prompts = [
 		{
-			name: 'customize'
+			type: 'confirm'
+			,name: 'customize'
 			,message: 'By default this module will have one template, a style sheet, a JS module (with tests) and a README.\n' +
 			          'Do you want to change that?'
-			,default: 'y|N'
+			,default: false
 		}
 	];
 
-	this.prompt(prompts, function (err, props) {
-		if (err) {
-			return this.emit('error', err);
-		}
-		this.customize = !(/y/i.test(props.customize));
+	this.prompt(prompts, function (props) {
+		this.customize = props.customize;
 
 		cb();
 	}.bind(this));
@@ -114,11 +100,7 @@ ModuleGenerator.prototype.doCustomize = function doCustomize() {
 		}
 	];
 
-	this.prompt(prompts, function (err, props) {
-
-		if (err) {
-			return this.emit('error', err);
-		}
+	this.prompt(prompts, function (props) {
 
 		switch (props.customizeSelection) {
 			case '1':
