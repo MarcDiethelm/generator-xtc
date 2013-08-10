@@ -1,14 +1,14 @@
 (function($) {
 	/**
-	 * Basic Skin implementation for the {%= nameJS %} module.
+	 * <%= nameSkinJs %> Skin implementation for the <%= nameModuleJs %> module.
 	 *
-	 * @author 
-	 * @namespace Tc.Module.Default
-	 * @class Basic
+	 * @author <%= user %>
+	 * @namespace Tc.Module.<%= nameModuleJs %>
+	 * @class <%= nameSkinJs %>
 	 * @extends Tc.Module
 	 * @constructor
 	 */
-	Tc.Module.{%= nameJS %}.{%= nameSkinJS %} = function(parent) {
+	Tc.Module.<%= nameModuleJs %>.<%= nameSkinJs %> = function(parent) {
 		/**
 		 * override the appropriate methods from the decorated module (ie. this.get = function()).
 		 * the former/original method may be called via parent.<method>()
