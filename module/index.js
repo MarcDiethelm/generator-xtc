@@ -134,9 +134,8 @@ ModuleGenerator.prototype.configure = function configure() {
 	this.nameFolder = cfg.moduleDirName.replace('{{name}}', this.name);
 	this.nameJS = toCamel(this.nameCSS).replace('mod', '');
 	this.nameTest = this.name + '.test.js';
-	//this.nameSkinJS
-	//this.nameSkinCSS
 	this.modulesDir = path.join(cfg.paths.modulesBaseDir, this.nameFolder);
+	this.user = process.env.USER;
 };
 
 

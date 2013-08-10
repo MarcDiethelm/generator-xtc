@@ -2,7 +2,7 @@
 	/**
 	 * <%= nameJS %> module implementation.
 	 *
-	 * @author 
+	 * @author <%= user %>
 	 * @namespace Tc.Module
 	 * @class Default
 	 * @extends Tc.Module
