@@ -20,20 +20,22 @@ var cfg = require( path.join(process.cwd(), 'app_modules/configure.js') ).merge(
 		,'local'
 	]).get();
 
+
+// welcome message
+// http://patorjk.com/software/taag/#p=display&f=Pepper&t=xtc%20mod%20gen
+var welcome =
+	'\n' +
+	"      _/__   _ _  _   _/  _  _  _ ".yellow.bold + '\n' +
+	"    ></ /_  / / //_//_/  /_//_'/ /".yellow.bold + '\n' +
+	"                         _/       ".yellow.bold + '\n\n' +
+	'    express-terrific module generator\n\n'.blue.bold +
+	'Please answer a few questions to create your new module.\n'.green
+;
+console.log(welcome);
+
+
 ModuleGenerator.prototype.askFor = function askFor() {
 	var cb = this.async();
-
-	// welcome message
-	// http://patorjk.com/software/taag/#p=display&f=Pepper&t=xtc%20mod%20gen
-	var welcome =
-		'\n' +
-		"      _/__   _ _  _   _/  _  _  _ ".yellow.bold + '\n' +
-		"    ></ /_  / / //_//_/  /_//_'/ /".yellow.bold + '\n' +
-		"                         _/       ".yellow.bold + '\n\n' +
-		'    express-terrific module generator\n\n'.blue.bold +
-		'Please answer a few questions to create your new module.\n'.green
-	;
-	console.log(welcome);
 
 	// module name
 	var prompts = [
@@ -88,42 +90,39 @@ ModuleGenerator.prototype.doCustomize = function doCustomize() {
 
 	var prompts = [
 		{
-			name: 'customizeSelection'
-			,message: 'Please choose:\n' +
-			          '[1] JS only\n' +
-			          '[2] HTML only\n' +
-			          '\n' +
-			          '[3] HTML + CSS\n' +
-			          '[4] HTML + JS\n' +
-			          '[5] JS + CSS\n' +
-			          ': '
+			type: 'list'
+			,name: 'customizeSelection'
+			,message: 'Please choose'
+			,choices: [
+				{
+					 name: 'JS only'
+					,value: ['needJs']
+				}
+				,{
+					 name: 'HTML only'
+					,value: ['needHtml']
+				}
+				,{
+					 name: 'HTML + CSS'
+					,value: ['needHtml', 'needCss']
+				}
+				,{
+					 name: 'HTML + JS'
+					,value: ['needHtml', 'needJs']
+				}
+				,{
+					 name: 'JS + CSS'
+					,value: ['needJs', 'needCss']
+				}
+			]
 		}
 	];
 
-	this.prompt(prompts, function (props) {
+	this.prompt(prompts, function (answer) {
 
-		switch (props.customizeSelection) {
-			case '1':
-				this.needJs = true;
-				break;
-			case '2':
-				this.needHtml = true;
-				break;
-			case '3':
-				this.needHtml = true;
-				this.needCss = true;
-				break;
-			case '4':
-				this.needHtml = true;
-				this.needJs = true;
-				break;
-			case '5':
-				this.needJs = true;
-				this.needCss = true;
-				break;
-			default:
-				// to do: ask again
-		}
+		answer.customizeSelection.forEach(function(value, index, array) {
+			this[value] = true;
+		}, this)
 
 		cb();
 	}.bind(this));
