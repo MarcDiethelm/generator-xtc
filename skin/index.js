@@ -2,6 +2,7 @@
 var util = require('util');
 var path = require('path');
 var yeoman = require('yeoman-generator');
+var chalk = require('chalk');
 
 var SkinGenerator = module.exports = function SkinGenerator(args, options, config) {
 	// By calling `NamedBase` here, we get the argument to the subgenerator call
@@ -13,25 +14,25 @@ var SkinGenerator = module.exports = function SkinGenerator(args, options, confi
 util.inherits(SkinGenerator, yeoman.generators.NamedBase);
 
 // Merge configuration data
-var cfg = require( path.join(process.cwd(), 'app_modules/configure.js') ).merge('_config/', [
+var cfg = require( path.join(process.cwd(), 'lib/configure.js') ).merge('_config/', [
 		 'default'
 		,'project'
 		,'secret'
 		,'local'
 	]).get();
 
-var overview = require( path.join(process.cwd(), 'app_modules/overview.js') )(cfg);
+var overview = require( path.join(process.cwd(), 'lib/overview.js') )(cfg);
 
 
 // welcome message
 // http://patorjk.com/software/taag/#p=display&f=Pepper&t=xtc skin gen
 var welcome =
 	'\n' +
-	"      _/__    _/_._   _  _  _ ".yellow.bold + '\n' +
-	"    ></ /_  _\\/\\// / /_//_'/ /".yellow.bold + '\n' +
-	"                     _/       ".yellow.bold + '\n\n' +
-	'    express-terrific skin generator\n\n'.blue.bold +
-	'Please answer a few questions to create your new skin.\n'.green
+	chalk.yellow.bold("      _/__    _/_._   _  _  _ ") + '\n' +
+	chalk.yellow.bold("    ></ /_  _\\/\\// / /_//_'/ /") + '\n' +
+	chalk.yellow.bold("                     _/       ") + '\n\n' +
+	chalk.blue.bold('    express-terrific skin generator\n\n') +
+	chalk.green('Please answer a few questions to create your new skin.\n')
 ;
 console.log(welcome);
 

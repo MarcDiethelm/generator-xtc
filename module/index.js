@@ -2,6 +2,7 @@
 var util = require('util');
 var path = require('path');
 var yeoman = require('yeoman-generator');
+var chalk = require('chalk');
 
 var ModuleGenerator = module.exports = function ModuleGenerator(args, options, config) {
 	// By calling `NamedBase` here, we get the argument to the subgenerator call
@@ -13,7 +14,7 @@ var ModuleGenerator = module.exports = function ModuleGenerator(args, options, c
 util.inherits(ModuleGenerator, yeoman.generators.NamedBase);
 
 // Merge configuration data
-var cfg = require( path.join(process.cwd(), 'app_modules/configure.js') ).merge('_config/', [
+var cfg = require( path.join(process.cwd(), 'lib/configure.js') ).merge('_config/', [
 		 'default'
 		,'project'
 		,'secret'
@@ -25,11 +26,11 @@ var cfg = require( path.join(process.cwd(), 'app_modules/configure.js') ).merge(
 // http://patorjk.com/software/taag/#p=display&f=Pepper&t=xtc%20mod%20gen
 var welcome =
 	'\n' +
-	"      _/__   _ _  _   _/  _  _  _ ".yellow.bold + '\n' +
-	"    ></ /_  / / //_//_/  /_//_'/ /".yellow.bold + '\n' +
-	"                         _/       ".yellow.bold + '\n\n' +
-	'    express-terrific module generator\n\n'.blue.bold +
-	'Please answer a few questions to create your new module.\n'.green
+	chalk.yellow.bold("      _/__   _ _  _   _/  _  _  _ ") + '\n' +
+	chalk.yellow.bold("    ></ /_  / / //_//_/  /_//_'/ /") + '\n' +
+	chalk.yellow.bold("                         _/       ") + '\n\n' +
+	chalk.blue.bold('    express-terrific module generator\n\n') +
+	chalk.green('Please answer a few questions to create your new module.\n')
 ;
 console.log(welcome);
 

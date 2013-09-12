@@ -2,6 +2,7 @@
 var util = require('util');
 var path = require('path');
 var yeoman = require('yeoman-generator');
+var chalk = require('chalk');
 
 
 var XtcGenerator = module.exports = function XtcGenerator(args, options, config) {
@@ -22,11 +23,11 @@ XtcGenerator.prototype.askFor = function askFor() {
 	// welcome message
 	var welcome =
 			'\n' +
-			"  _/__    _  __  ._  _ _/_  _  _  _ " +
-			"></ /_   /_///_///_'/_ /   /_//_'/ /" +
-			"        /     |/           _/       " + '\n\n' +
-			'    express-terrific project generator\n\n'.blue.bold +
-			'Please answer a few questions to create your new project.\n'.green
+			chalk.yellow.bold("  _/__    _  __  ._  _ _/_  _  _  _ ") + '\n' +
+			chalk.yellow.bold("></ /_   /_///_///_'/_ /   /_//_'/ /") + '\n' +
+			chalk.yellow.bold("        /     |/           _/       ") + '\n\n' +
+			chalk.blue.bold('    express-terrific project generator\n\n') +
+			chalk.green('Please answer a few questions to create your new project.\n')
 		;
 
 	console.log(welcome);
