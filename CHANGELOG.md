@@ -1,3 +1,11 @@
+
+# 0.7.0 / develop
+
+xxxx-xx-xx
+
+ - Use skins directory name from app configuration.
+
+
 # 0.6.1
 
 2013-09-12

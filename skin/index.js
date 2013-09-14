@@ -120,7 +120,7 @@ SkinGenerator.prototype.configure = function configure() {
 	this.nameModuleJs = toCamel('-'+ this.moduleName); // the Terrific camelize function below assumes we have 'mod-' in front
 	this.nameSkinJs = toCamel('-'+ this.skinName);
 	this.modulesDir = path.join(cfg.paths.modulesBaseDir, this.nameModuleFolder);
-	this.skinDir = path.join(this.modulesDir, 'skin');
+	this.skinDir = path.join(this.modulesDir, cfg.skinsDirName);
 	this.user = process.env.USER;
 };
 
