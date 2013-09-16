@@ -3,7 +3,8 @@
 
 xxxx-xx-xx
 
- - Use skins directory name from app configuration.
+- Use skins directory name from app configuration.
+- Updated to new test file format.
 
 
 # 0.6.1
