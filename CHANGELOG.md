@@ -1,7 +1,14 @@
 
-# 0.7.0 / develop
+# 0.8.0 / develop
 
 xxxx-xx-xx
+
+- ...
+
+
+# 0.7.0
+
+2013-09-19
 
 - Use skins directory name from app configuration.
 - Updated to new test file format.
