@@ -14,12 +14,7 @@ var SkinGenerator = module.exports = function SkinGenerator(args, options, confi
 util.inherits(SkinGenerator, yeoman.generators.NamedBase);
 
 // Merge configuration data
-var cfg = require( path.join(process.cwd(), 'lib/configure.js') ).merge('_config/', [
-		 'default'
-		,'project'
-		,'secret'
-		,'local'
-	]).get();
+var cfg = require( path.join(process.cwd(), 'lib/configure.js') ).get();
 
 var overview = require( path.join(process.cwd(), 'lib/overview.js') )(cfg);
 

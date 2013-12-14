@@ -14,12 +14,7 @@ var ModuleGenerator = module.exports = function ModuleGenerator(args, options, c
 util.inherits(ModuleGenerator, yeoman.generators.NamedBase);
 
 // Merge configuration data
-var cfg = require( path.join(process.cwd(), 'lib/configure.js') ).merge('_config/', [
-		 'default'
-		,'project'
-		,'secret'
-		,'local'
-	]).get();
+var cfg = require( path.join(process.cwd(), 'lib/configure.js') ).get();
 
 
 // welcome message
