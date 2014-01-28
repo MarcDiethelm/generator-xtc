@@ -14,12 +14,7 @@ var ModuleGenerator = module.exports = function ModuleGenerator(args, options, c
 util.inherits(ModuleGenerator, yeoman.generators.NamedBase);
 
 // Merge configuration data
-var cfg = require( path.join(process.cwd(), 'lib/configure.js') ).merge('_config/', [
-		 'default'
-		,'project'
-		,'secret'
-		,'local'
-	]).get();
+var cfg = require( path.join(process.cwd(), 'lib/configure.js') ).get();
 
 
 // welcome message
@@ -135,7 +130,7 @@ ModuleGenerator.prototype.configure = function configure() {
 	this.nameFolder = cfg.moduleDirName.replace('{{name}}', this.name);
 	this.nameJS = toCamel(this.nameCSS).replace('mod', '');
 	this.nameTest = this.name + '.test.js';
-	this.modulesDir = path.join(cfg.paths.modulesBaseDir, this.nameFolder);
+	this.modulesDir = path.join(cfg.sources.modulesBaseDir, this.nameFolder);
 	this.user = process.env.USER;
 };
 
