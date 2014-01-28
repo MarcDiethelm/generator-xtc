@@ -5,6 +5,13 @@ xxxx-xx-xx
 
 - ...
 
+# 0.8.0-beta3 / develop
+
+2014-01-28
+
+- Compatible with xtc's new configuration schema (with same version string)
+- Update dependencies
+
 
 # 0.7.0
 
