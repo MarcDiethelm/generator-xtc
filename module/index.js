@@ -7,15 +7,16 @@ var chalk = require('chalk');
 var ModuleGenerator = module.exports = function ModuleGenerator(args, options, config) {
 	// By calling `NamedBase` here, we get the argument to the subgenerator call
 	// as `this.name`.
+
 	yeoman.generators.Base.apply(this, arguments);
 	this.argument('name', { type: String, required: false });
+
+	this.xtcPath = this.options.path ? path.resolve(process.cwd(), this.options.path) : process.cwd();
+	var xtcPkg = require( path.join(this.xtcPath, 'package.json') );
+	this.xtcCfg = require( path.join(this.xtcPath, 'lib/configure.js') ).get();
 };
 
 util.inherits(ModuleGenerator, yeoman.generators.NamedBase);
-
-// Merge configuration data
-var cfg = require( path.join(process.cwd(), 'lib/configure.js') ).get();
-
 
 // welcome message
 // http://patorjk.com/software/taag/#p=display&f=Pepper&t=xtc%20mod%20gen
@@ -127,10 +128,10 @@ ModuleGenerator.prototype.doCustomize = function doCustomize() {
 
 ModuleGenerator.prototype.configure = function configure() {
 	this.nameCSS = 'mod-' + this.name;
-	this.nameFolder = cfg.moduleDirName.replace('{{name}}', this.name);
+	this.nameFolder = this.xtcCfg.moduleDirName.replace('{{name}}', this.name);
 	this.nameJS = toCamel(this.nameCSS).replace('mod', '');
 	this.nameTest = this.name + '.test.js';
-	this.modulesDir = path.join(cfg.sources.modulesBaseDir, this.nameFolder);
+	this.modulesDir = path.join(this.xtcCfg.sources.modulesBaseDir, this.nameFolder);
 	this.user = process.env.USER;
 };
 

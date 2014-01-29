@@ -1,11 +1,17 @@
 
-# 0.8.0 / develop
+# 0.9.0 / develop
 
 xxxx-xx-xx
 
 - ...
 
-# 0.8.0-beta3 / develop
+# 0.8.0-beta3-1
+
+2014-01-29
+
+- Resolve paths correctly in more complex cases.
+
+# 0.8.0-beta3
 
 2014-01-28
 
