@@ -9,14 +9,15 @@ var SkinGenerator = module.exports = function SkinGenerator(args, options, confi
 	// as `this.name`.
 	yeoman.generators.Base.apply(this, arguments);
 	this.argument('skinName', { type: String, required: false });
+
+	this.xtcPath = this.options.path ? path.resolve(process.cwd(), this.options.path) : process.cwd();
+	var xtcPkg = require( path.join(this.xtcPath, 'package.json') );
+	this.xtcCfg = require( path.join(this.xtcPath, 'lib/configure.js') ).get();
+	this.xtcOverview = require( path.join(this.xtcPath, 'lib/overview.js') )(this.xtcCfg);
 };
 
 util.inherits(SkinGenerator, yeoman.generators.NamedBase);
 
-// Merge configuration data
-var cfg = require( path.join(process.cwd(), 'lib/configure.js') ).get();
-
-var overview = require( path.join(process.cwd(), 'lib/overview.js') )(cfg);
 
 
 // welcome message
@@ -33,7 +34,7 @@ console.log(welcome);
 
 SkinGenerator.prototype.moduleChoice = function moduleChoice() {
 	var cb = this.async();
-	var existingModules = overview.modules.map(function(module) {
+	var existingModules = this.xtcOverview.modules.map(function(module) {
 			return {
 				 name: module.name
 				,value: module.name
@@ -109,13 +110,13 @@ SkinGenerator.prototype.skinChoices = function doCustomize() {
 
 
 SkinGenerator.prototype.configure = function configure() {
-	var moduleFolderPrefix = cfg.moduleDirName.replace('{{name}}', '').replace('/', '');
+	var moduleFolderPrefix = this.xtcCfg.moduleDirName.replace('{{name}}', '').replace('/', '');
 
 	this.nameModuleFolder = moduleFolderPrefix + this.moduleName;
 	this.nameModuleJs = toCamel('-'+ this.moduleName); // the Terrific camelize function below assumes we have 'mod-' in front
 	this.nameSkinJs = toCamel('-'+ this.skinName);
-	this.modulesDir = path.join(cfg.sources.modulesBaseDir, this.nameModuleFolder);
-	this.skinDir = path.join(this.modulesDir, cfg.skinsDirName);
+	this.modulesDir = path.join(this.xtcCfg.sources.modulesBaseDir, this.nameModuleFolder);
+	this.skinDir = path.join(this.modulesDir, this.xtcCfg.skinsDirName);
 	this.user = process.env.USER;
 };
 
