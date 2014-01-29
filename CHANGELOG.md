@@ -10,6 +10,7 @@ xxxx-xx-xx
 2014-01-29
 
 - Resolve paths correctly in more complex cases.
+- Template file extension is taken from xtc config.
 
 # 0.8.0-beta3
 

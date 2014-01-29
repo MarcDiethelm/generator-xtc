@@ -139,7 +139,7 @@ ModuleGenerator.prototype.configure = function configure() {
 ModuleGenerator.prototype.files = function files() {
 	nl();
 	this.mkdir(this.modulesDir);
-	(!this.customize || this.needHtml) && this.template('_name.hbs', path.join(this.modulesDir, this.name +'.hbs'));
+	(!this.customize || this.needHtml) && this.template('_name.hbs', path.join(this.modulesDir, this.name + (this.xtcCfg.templateExtension || '.hbs' )));
 	(!this.customize || this.needCss) && this.template('_name.less', path.join(this.modulesDir, this.name +'.less'));
 
 	if (!this.customize || this.needJs) {
