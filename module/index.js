@@ -56,19 +56,19 @@ ModuleGenerator.prototype.customize = function customize() {
 
 	nl();
 
-	// need customization?
+	// accept defaults?
 	var prompts = [
 		{
 			type: 'confirm'
-			,name: 'customize'
+			,name: 'acceptDefaults'
 			,message: 'By default this module will have one template, a style sheet, a JS module (with tests) and a README.\n' +
-			          'Do you want to change that?'
-			,default: false
+			          'Ok?'
+			,default: true
 		}
 	];
 
 	this.prompt(prompts, function (props) {
-		this.customize = props.customize;
+		this.customize = !props.acceptDefaults;
 
 		cb();
 	}.bind(this));
