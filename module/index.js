@@ -111,6 +111,10 @@ ModuleGenerator.prototype.doCustomize = function doCustomize() {
 					 name: 'JS + CSS'
 					,value: ['needJs', 'needCss']
 				}
+				,{
+					 name: 'HTML + CSS + JS'
+					,value: ['needHtml', 'needCss', 'needJs']
+				}
 			]
 		}
 	];

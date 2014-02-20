@@ -6,6 +6,7 @@
 # 0.8.0-beta4 – 2014-02-20
 
 - Fix the confusing "change that?" question in the module generator.
+- Can get all default files even when requesting customization.
 
 # 0.8.0-beta3-1 – 2014-01-29
 
