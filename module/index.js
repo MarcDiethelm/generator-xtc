@@ -28,7 +28,7 @@ var welcome =
 	chalk.blue.bold('    express-terrific module generator\n\n') +
 	chalk.green('Please answer a few questions to create your new module.\n')
 ;
-console.log(welcome);
+console.info(welcome);
 
 
 ModuleGenerator.prototype.askFor = function askFor() {
@@ -152,6 +152,14 @@ ModuleGenerator.prototype.files = function files() {
 		this.template('test/_name.test.js', path.join(this.modulesDir, 'test', this.nameTest));
 	}
 	this.template('_README.md', path.join(this.modulesDir, 'README.md'));
+};
+
+
+ModuleGenerator.prototype.snippet = function snippet() {
+
+	if (this.xtcCfg.templateExtension === '.hbs') {
+		console.info('\nSnippet:  '+ chalk.blue.bold('{{mod "%s"}}') +'\n', this.name);
+	}
 };
 
 

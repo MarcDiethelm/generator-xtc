@@ -7,6 +7,7 @@
 
 - Fix the confusing "change that?" question in the module generator.
 - Can get all default files even when requesting customization.
+- Print a Handlebars snippet after module/skin generation.
 
 # 0.8.0-beta3-1 – 2014-01-29
 
