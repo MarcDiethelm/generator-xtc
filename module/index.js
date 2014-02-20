@@ -28,7 +28,7 @@ var welcome =
 	chalk.blue.bold('    express-terrific module generator\n\n') +
 	chalk.green('Please answer a few questions to create your new module.\n')
 ;
-console.log(welcome);
+console.info(welcome);
 
 
 ModuleGenerator.prototype.askFor = function askFor() {
@@ -56,19 +56,19 @@ ModuleGenerator.prototype.customize = function customize() {
 
 	nl();
 
-	// need customization?
+	// accept defaults?
 	var prompts = [
 		{
 			type: 'confirm'
-			,name: 'customize'
+			,name: 'acceptDefaults'
 			,message: 'By default this module will have one template, a style sheet, a JS module (with tests) and a README.\n' +
-			          'Do you want to change that?'
-			,default: false
+			          'Ok?'
+			,default: true
 		}
 	];
 
 	this.prompt(prompts, function (props) {
-		this.customize = props.customize;
+		this.customize = !props.acceptDefaults;
 
 		cb();
 	}.bind(this));
@@ -111,6 +111,10 @@ ModuleGenerator.prototype.doCustomize = function doCustomize() {
 					 name: 'JS + CSS'
 					,value: ['needJs', 'needCss']
 				}
+				,{
+					 name: 'HTML + CSS + JS'
+					,value: ['needHtml', 'needCss', 'needJs']
+				}
 			]
 		}
 	];
@@ -148,6 +152,14 @@ ModuleGenerator.prototype.files = function files() {
 		this.template('test/_name.test.js', path.join(this.modulesDir, 'test', this.nameTest));
 	}
 	this.template('_README.md', path.join(this.modulesDir, 'README.md'));
+};
+
+
+ModuleGenerator.prototype.snippet = function snippet() {
+
+	if (this.xtcCfg.templateExtension === '.hbs') {
+		console.info('\nSnippet:  '+ chalk.blue.bold('{{mod "%s"}}') +'\n', this.name);
+	}
 };
 
 

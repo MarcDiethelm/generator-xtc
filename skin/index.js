@@ -130,6 +130,14 @@ SkinGenerator.prototype.files = function files() {
 };
 
 
+SkinGenerator.prototype.snippet = function snippet() {
+
+	if (this.xtcCfg.templateExtension === '.hbs') {
+		console.info('\nSnippet:  '+ chalk.blue.bold('{{mod "%s" skins="%s"}}') +'\n', this.moduleName, this.skinName);
+	}
+};
+
+
 
 /**
 * Camelizes the given string.
