@@ -4,13 +4,15 @@
 A Yeoman generator for xtc projects.
 
 ## Getting started
-- Make sure you have [yo](https://github.com/yeoman/yo) installed:
-    `npm install -g yo`
-- Install the generator: `npm install -g generator-xtc`
 
-Only Terrific modules and skins can be created so far.
+### Installation
 
-For usage please refer to the [xtc documentation](https://github.com/MarcDiethelm/xtc#terrific-module-creation).
+- Install *yo* and the generator: `npm install -g yo generator-xtc`
+
+So far the generator only creates Terrific.js *modules* and *skins*.
+
+### Usage
+For usage please refer to the [xtc documentation](https://github.com/MarcDiethelm/xtc/blob/master/Documentation.md#module-creation).
 
 ## License
 [MIT License](http://en.wikipedia.org/wiki/MIT_License)

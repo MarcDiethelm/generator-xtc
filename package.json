@@ -1,6 +1,6 @@
 {
   "name": "generator-xtc",
-  "version": "0.8.0-beta4",
+  "version": "0.8.0-beta4-1",
   "description": "A generator for xtc projects",
   "keywords": [
     "yeoman-generator", "xtc"
