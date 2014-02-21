@@ -3,7 +3,9 @@
 
 - ...
 
-# 0.8.0-beta4 – 2014-02-21
+# 0.8.0-beta4-1 – 2014-02-21
+
+The version is beta4-1 because of some confusion about [a change in npm](https://github.com/npm/npmjs.org/issues/148#issuecomment-35686492).
 
 - Fix the confusing "change that?" question in the module generator.
 - Can get all default files even when requesting customization.
