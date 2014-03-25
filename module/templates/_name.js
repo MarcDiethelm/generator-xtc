@@ -4,7 +4,7 @@
 	 *
 	 * @author <%= user %>
 	 * @namespace Tc.Module
-	 * @class Default
+	 * @class <%= nameJS %>
 	 * @extends Tc.Module
 	 */
 	Tc.Module.<%= nameJS %> = Tc.Module.extend({
