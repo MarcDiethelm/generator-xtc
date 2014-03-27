@@ -10,10 +10,10 @@ var SkinGenerator = module.exports = function SkinGenerator(args, options, confi
 	yeoman.generators.Base.apply(this, arguments);
 	this.argument('skinName', { type: String, required: false });
 
-	this.xtcPath = this.options.path ? path.resolve(process.cwd(), this.options.path) : process.cwd();
-	var xtcPkg = require( path.join(this.xtcPath, 'package.json') );
-	this.xtcCfg = require( path.join(this.xtcPath, 'lib/configure.js') ).get();
-	this.xtcOverview = require( path.join(this.xtcPath, 'lib/overview.js') )(this.xtcCfg);
+	this.projectPath = this.options.path ? path.resolve(process.cwd(), this.options.path) : process.cwd();
+	var xtcPkg = require( path.join(this.projectPath, 'package.json') );
+	this.xtcCfg = require( path.join(this.projectPath, 'lib/configure.js') ).get();
+	this.xtcOverview = require( path.join(this.projectPath, 'lib/overview.js') )(this.xtcCfg);
 };
 
 util.inherits(SkinGenerator, yeoman.generators.NamedBase);

@@ -11,9 +11,9 @@ var ModuleGenerator = module.exports = function ModuleGenerator(args, options, c
 	yeoman.generators.Base.apply(this, arguments);
 	this.argument('name', { type: String, required: false });
 
-	this.xtcPath = this.options.path ? path.resolve(process.cwd(), this.options.path) : process.cwd();
-	var xtcPkg = require( path.join(this.xtcPath, 'package.json') );
-	this.xtcCfg = require( path.join(this.xtcPath, 'lib/configure.js') ).get();
+	this.projectPath = this.options.path ? path.resolve(process.cwd(), this.options.path) : process.cwd();
+	var xtcPkg = require( path.join(this.projectPath, 'package.json') );
+	this.xtcCfg = require( path.join(this.projectPath, 'lib/configure.js') ).get();
 };
 
 util.inherits(ModuleGenerator, yeoman.generators.NamedBase);
