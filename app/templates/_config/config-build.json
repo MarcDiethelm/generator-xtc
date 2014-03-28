@@ -1,6 +1,6 @@
 /**
  * This file is for use of xtc as a build/generator tool without running the xtc server.
- * To use it rename it to config-build.json and change configs.json to
+ * To use it include it in configs.json similarly to this:
 [
 	"default"
 	,"build"
@@ -11,8 +11,8 @@
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// App basics
 
-	// Should asset building include sprites generation? Dependencies: Glue (Python) and OptiPNG (binary executable)
-	"enableSpritesBuilding": false
+	//  Should asset building include sprites generation? Dependencies: Glue (Python)
+	"enableSpritesBuilding": "<%=enableSprites%>"
 
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -20,7 +20,7 @@
 	// Paths to frontend source folders relative to process start dir, will be resolved to absolute paths
 
 	// base path to the frontend sources, can be empty
-	,"sourcesBasePath": "../frontend/"
+	,"sourcesBasePath": "frontend/"
 	,"sources": {
 		"inline"            : "_inline"
 		,"base"             : "_base"
@@ -36,7 +36,7 @@
 	// Frontend asset build destinations
 	// Destination paths and file names. Paths relative to process start dir, will be resolved to absolute paths.
 
-	,"buildBasePath"    : "../frontend/_public/"
+	,"buildBasePath"    : "frontend/_public/"
 	,"build": {
 	// baseDirNameX is relative to buildBasePath
 		"baseDirNameDev"    : "build", // Include this dir in .gitignore

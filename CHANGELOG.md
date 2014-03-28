@@ -4,6 +4,7 @@
 
 # 0.8.0-beta6 – x
 - Fix missing extrapolation of @class name in module JS template.
+- Project generator. This is now the default installation method for xtc.
 
 # 0.8.0-beta4-1 – 2014-02-21
 The version is beta4-1 because of some confusion about [a change in npm](https://github.com/npm/npmjs.org/issues/148#issuecomment-35686492).

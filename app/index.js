@@ -3,7 +3,10 @@ var util = require('util');
 var path = require('path');
 var yeoman = require('yeoman-generator');
 var chalk = require('chalk');
+var _projectJson = require('./templates/_package.json');
 var _projectPath = '';
+var log = console.log;
+var dir = console.dir;
 
 
 var XtcGenerator = module.exports = function XtcGenerator(args, options, config) {
@@ -13,52 +16,83 @@ var XtcGenerator = module.exports = function XtcGenerator(args, options, config)
 		this.installDependencies({ skipInstall: options['skip-install'] });
 	});
 
-	this.pkg = JSON.parse(this.readFileAsString(path.join(__dirname, '../package.json')));
-
+	this.pkg = _projectJson;
 	this.projectPath = this.options.path ? path.resolve(process.cwd(), this.options.path) : process.cwd();
 	_projectPath = this.projectPath;
 };
 
 util.inherits(XtcGenerator, yeoman.generators.Base);
 
-// welcome message
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// WELCOME MESSAGE
+
+
 var welcome =
 	'\n' +
-	chalk.yellow.bold("  _/__    _  __  ._  _ _/_  _  _  _ ") + '\n' +
-	chalk.yellow.bold("></ /_   /_///_///_'/_ /   /_//_'/ /") + '\n' +
-	chalk.yellow.bold("        /     |/           _/       ") + '\n\n' +
-	chalk.blue.bold('    express-terrific project generator\n\n') +
-	chalk.green('Please answer a few questions to create your new project.\n')
+	chalk.magenta("    _/__    _  __  ._  _ _/_  _  _  _ ") + '\n' +
+	chalk.magenta("  ></ /_   /_///_///_'/_ /   /_//_'/ /") + '\n' +
+	chalk.magenta("          /     |/           _/       ") + '\n\n' +
+	chalk.blue(' * express-terrific project generator *\n\n') +
+	chalk.cyan('This generator will install xtc@%s\n') +
+	chalk.cyan('Please answer a few questions to set up your new project.\n')
 ;
 
-console.log(welcome);
+console.log(welcome, _projectJson.dependencies.xtc);
 
 
-/*XtcGenerator.prototype.foo = function foo() {
-	var cb = this.async()
-	this.fetch('https://raw.githubusercontent.com/yeoman/generator/master/lib/actions/fetch.js', '__test', function() {
-		console.dir(arguments)
-	});
-}*/
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// NAME AND REPOSITORY
+
+
 XtcGenerator.prototype.basics = function basics() {
 	var cb = this.async()
 		,prompts = [
 		{
 			name: 'name'
-			,message: 'What\'s the name of the new project?\n(all lowercase, hyphen separated)'
+			,message: 'Enter a package name for the new project (no spaces)'
+			,validate: validateString
 		},
 		{
-			name: 'repository'
-			,message: 'Repository ( https "read-only" .git URI, if available)'
+			name: 'repoUri'
+			,message: '"Read-only" repository URI (https://host/path/to/project.git or blank)'
+			,validate: validateGitUri
+		}
+	];
+
+	this.repository = {};
+
+	this.prompt(prompts, function(props) {
+		this.name = props.name;
+		this.repository.uri = props.repoUri;
+		cb();
+	}.bind(this));
+};
+
+
+XtcGenerator.prototype.gitBranch = function gitBranch() {
+	var cb, prompts;
+
+	if (!this.repository.uri) { return }
+	cb = this.async();
+
+	prompts = [
+		{
+			name: 'branch'
+			,message: 'What branch should be used when linking to project source files'
+			,default: 'develop'
 		}
 	];
 
 	this.prompt(prompts, function(props) {
-		this.name = props.name;
-		this.repository = props.repository;
+		this.repository.branch = props.branch;
 		cb();
 	}.bind(this));
 };
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// CHOOSE SERVER AND BUILD PARTS
 
 
 XtcGenerator.prototype.parts = function parts() {
@@ -83,31 +117,65 @@ XtcGenerator.prototype.parts = function parts() {
 		}
 	];
 
-	this.needServer = false;
 	this.needBuild = false;
+	this.needServer = false;
+	this.configs = ['"default"'];
 
 	this.prompt(prompts, function(props) {
 		var i;
 		for (i = 0; i < props.neededParts.length; i++) {
-			this[props.neededParts[i]] = true;
+			var value = props.neededParts[i];
+			this[value] = true;
 		}
+
+		this.needBuild && this.configs.push('"build"');
+		this.needServer && this.configs.push('"server"', '"secret"');
+		this.configs.push('"local"');
 		cb();
 	}.bind(this));
 };
 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// BUILD CONFIG
+
+
+XtcGenerator.prototype.glue = function glue() {
+	var cb, prompts;
+
+	if (!this.needBuild) { return }
+	cb = this.async();
+
+	prompts = [
+		{
+			name: 'enableSprites'
+			,message: 'Enable sprites generation? Note: Needs a working "glue" (Python) installation.'
+			,type: 'confirm'
+			,default: false
+		}
+	];
+
+	this.prompt(prompts, function(props) {
+		this.enableSprites = props.enableSprites;
+		cb();
+	}.bind(this));
+};
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// SERVER CONFIG
+
+
 XtcGenerator.prototype.sitename = function sitename() {
 	var cb, prompts;
 
-	if (!this.needServer) {
-		return;
-	}
-
+	if (!this.needServer) { return }
 	cb = this.async();
+
 	prompts = [
 		{
 			name: 'siteName'
-			,message: 'What is the name of the web site'
+			,message: 'Enter the website\'s name'
 		}
 	];
 
@@ -117,7 +185,13 @@ XtcGenerator.prototype.sitename = function sitename() {
 	}.bind(this));
 };
 
-XtcGenerator.prototype.app = function app() {
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Copy Files
+
+
+XtcGenerator.prototype.copyFiles = function copyFiles() {
 
 	// Project
 	this.copy('_package.json', projectPath('package.json'));
@@ -130,8 +204,6 @@ XtcGenerator.prototype.app = function app() {
 	this.mkdir(projectPath('_config'));
 	this.copy('_config/configs.json', projectPath('_config/configs.json'));
 	this.copy('_config/config-default.js', projectPath('_config/config-default.js'));
-	this.copy('_config/config-project.json', projectPath('_config/config-project.json'));
-	this.copy('_config/config-secret.json', projectPath('_config/config-secret.json'));
 	this.copy('_config/config-local.json', projectPath('_config/config-local.json'));
 
 	// README.md
@@ -142,17 +214,21 @@ XtcGenerator.prototype.app = function app() {
 
 	// Server
 	if (this.needServer) {
-		//this.copy('server.js', projectPath('server.js'));
+		this.copy('_config/config-server.json', projectPath('_config/config-server.json'));
+		this.copy('_config/config-secret.json', projectPath('_config/config-secret.json'));
 		this.copy('_config/pinned-views.json', projectPath('_config/pinned-views.json'));
 		this.directory('_controllers', projectPath('controllers'));
+
 		// Helpers
 		this.mkdir(projectPath('lib'));
 		this.copy('_lib/handlebars-helpers.js', projectPath('lib/handlebars-helpers.js'));
+		//this.copy('server.js', projectPath('server.js'));
 	}
 
 	// Build
 	if (this.needBuild) {
 		this.copy('Gruntfile.js', projectPath('Gruntfile.js'));
+		this.copy('_config/config-build.json', projectPath('_config/config-build.json'));
 	}
 
 	// Deployment
@@ -163,6 +239,18 @@ XtcGenerator.prototype.app = function app() {
 };
 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Helpers
+
+
 function projectPath(joinPath) {
 	return path.join(_projectPath, joinPath);
+}
+
+function validateString(value) {
+	return typeof value === 'string' && value.length > 0;
+}
+
+function validateGitUri(value) {
+	return value === '' || /^(https):(\/\/)([\w\.\:/\-~]+)(\.git)$/.test(value);
 }
