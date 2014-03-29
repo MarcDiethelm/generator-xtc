@@ -12,13 +12,17 @@ var dir = console.dir;
 var XtcGenerator = module.exports = function XtcGenerator(args, options, config) {
 	yeoman.generators.Base.apply(this, arguments);
 
-	this.on('end', function () {
-		this.installDependencies({ skipInstall: options['skip-install'] });
-	});
-
 	this.pkg = _projectJson;
 	this.projectPath = this.options.path ? path.resolve(process.cwd(), this.options.path) : process.cwd();
 	_projectPath = this.projectPath;
+
+
+	this.on('end', function () {
+		this.installDependencies({
+			skipInstall: options['skip-install'],
+			callback: onDependenciesInstalled.bind(this)
+		});
+	});
 };
 
 util.inherits(XtcGenerator, yeoman.generators.Base);
@@ -240,6 +244,26 @@ XtcGenerator.prototype.copyFiles = function copyFiles() {
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Outro
+
+
+function onDependenciesInstalled() {
+
+	var outro =
+		'\nInstallation complete!\n\n' +
+
+		chalk.cyan('npm run build') +'\t\tstarts dev build\n' +
+		chalk.cyan('npm start') +    '\t\tstarts the server\n'
+		//chalk.cyan('npm start') +    '\t\tstarts the server\n\n' +
+
+		//chalk.cyan('npm run mkmod') +    '\t\tcreate a frontend module\n' +
+		//chalk.cyan('npm run mkskin') +    '\t\tcreate a skin for a frontend module\n'
+	;
+	console.log(outro);
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Helpers
 
 
@@ -252,5 +276,5 @@ function validateString(value) {
 }
 
 function validateGitUri(value) {
-	return value === '' || /^(https):(\/\/)([\w\.\:/\-~]+)(\.git)$/.test(value);
+	return value === '' || /^https:\/\/[\w\.\:/\-~]+\.git$/.test(value);
 }
